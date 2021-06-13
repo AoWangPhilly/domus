@@ -7,5 +7,8 @@ cursor = conn.cursor()
 
 # Query database
 cursor.execute('SELECT rowid, * FROM room_metrics')
-print(tabulate(cursor.fetchall(), tablefmt='pql'))
+
+column_names = list(map(lambda x: x[0], cursor.description))
+
+print(tabulate(cursor.fetchall(), headers=column_names, tablefmt='pql'))
 
