@@ -9,9 +9,18 @@ cursor = conn.cursor()
 # Create table
 cursor.execute(
 '''CREATE TABLE room_metrics (
-	date text,
-	humidity text,
-	temperature text
+	date TEXT,
+	humidity REAL,
+	temperature REAL
  )''')
+
+cursor.execute(
+'''CREATE TABLE openweather (
+	date TEXT,
+	humidity REAL,
+	temperature REAL,
+	temperature_min REAL,
+	temperature_max REAL
+)''')
 
 conn.close()
