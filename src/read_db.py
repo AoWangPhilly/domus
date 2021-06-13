@@ -10,5 +10,8 @@ cursor.execute('SELECT rowid, * FROM room_metrics')
 
 column_names = list(map(lambda x: x[0], cursor.description))
 
-print(tabulate(cursor.fetchall(), headers=column_names, tablefmt='pql'))
+print(tabulate(cursor.fetchall(), headers=column_names, tablefmt='pretty'))
 
+cursor.execute('SELECT rowid, * FROM openweather')
+column_names = list(map(lambda x: x[0], cursor.description))
+print(tabulate(cursor.fetchall(), headers=column_names, tablefmt='pretty'))
