@@ -15,11 +15,11 @@ QUERY_URL = f'{BASE_URL}q={CITY_NAME}&appId={TOKEN}&units={UNITS}'
 # ----------------------------------------------------------------------
 
 class OpenWeatherMapReader:
-	def __init__(self, url_query):
-		self.url_query = url_query
+	def __init__(self, query_url):
+		self.query_url = query_url
 	
 	def get_temperature_and_humidity(self):
-		response = requests.get(self.url_query)
+		response = requests.get(self.query_url)
 		if response.status_code == 200:
 			data = response.json()
 			main = data['main']
@@ -30,7 +30,7 @@ class OpenWeatherMapReader:
 
 		
 if __name__ == '__main__':
-	weather_api = OpenWeatherMapReader(url_query=QUERY_URL) 
+	weather_api = OpenWeatherMapReader(query_url=QUERY_URL) 
 	print(weather_api.get_temperature_and_humidity())
 
 
