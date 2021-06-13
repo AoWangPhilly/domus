@@ -4,7 +4,7 @@ import datetime as dt
 # Serial port: ls -l /dev/cu.usb*
 SERIAL_PORT = '/dev/cu.usbmodem2201'
 
-class SerialPortReader:
+class SerialReader:
 	def __init__(self, port):
 		self.ser = serial.Serial(port)
 		self.ser.flushInput()
@@ -24,5 +24,5 @@ class SerialPortReader:
 		return [date] + decoded_bytes
 		
 if __name__ == '__main__':
-	serial_port = SerialPortReader(SERIAL_PORT)
+	serial_port = SerialReader(SERIAL_PORT)
 	print(serial_port.read_serial())
