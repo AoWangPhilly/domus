@@ -13,3 +13,5 @@ cursor.execute(
 	humidity text,
 	temperature text
  )''')
+
+conn.close()
