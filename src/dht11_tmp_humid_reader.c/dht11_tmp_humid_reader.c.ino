@@ -11,7 +11,7 @@ float tempC;
 float tempF;
 
 // delay a minute between each read
-unsigned long setTime = 1*60*1000UL;
+unsigned long setTime = 5*60*1000UL;
 
 void setup() {
   Serial.begin(9600);
