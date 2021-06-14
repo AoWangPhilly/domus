@@ -18,9 +18,15 @@ room_metrics['date'] = pd.to_datetime(room_metrics['date'])
 
 conn.close()
 
-fig = px.line(room_metrics, x='date', y='temperature', title='Temperature (°C)')
+fig = px.line(
+	room_metrics, 
+	x='date', 
+	y='temperature',
+ 	title='Temperature (°C)'
+)
 
 
+room_metrics['date'] = room_metrics['date'].dt.strftime('%a %b %d %I:%M')
 navbar = dbc.NavbarSimple(brand='Dashboard', brand_href='#', color='primary', dark=True)
 
 app = dash.Dash(
@@ -30,25 +36,43 @@ app = dash.Dash(
 app.layout = html.Div(children=[
 	html.H1(children='domus'),
 	navbar,
-	dbc.Card(
-		dbc.CardBody(
-			dcc.Graph(
-        			id='example-graph',
-        			figure=fig,
-				config={"displayModeBar": False}
-    			)
-		),
-		className='mb-3'
-	),
-	dbc.Card(
-		dbc.CardBody(
-			dash_table.DataTable(
-    				id='table',
-    				columns=[{"name": i, "id": i} for i in openweather.columns],
-    				data=openweather.to_dict('records')
+	dbc.CardDeck(
+		[
+			dbc.Card(
+				dbc.CardBody(
+					dcc.Graph(
+        					id='example-graph',
+        					figure=fig,
+						config={"displayModeBar": False}
+    					)
+				),
+				className='mb-3'
 			)
-		),
-		className='mb-3'
+		]
+	),
+	dbc.CardDeck(
+		[
+			dbc.Card(
+				dbc.CardBody([
+					dcc.DatePickerRange(
+    						end_date=dt.date(2017,6,21),
+    						display_format='MMMM Y, DD',
+    						start_date_placeholder_text='MMMM Y, DD'
+					)])
+			),
+			dbc.Card(
+				dbc.CardBody([
+					dash_table.DataTable(
+    						id='table',
+    						columns=[{"name": i, "id": i} for i in room_metrics.columns],
+    						data=room_metrics.to_dict('records'),
+						page_size=20,
+						fixed_rows={'headers': True},
+						style_table={'height': '300px', 'overflowY': 'auto'}
+					)])
+			)
+		]
+
 	)
 ])
 
