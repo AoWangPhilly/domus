@@ -20,20 +20,35 @@ conn.close()
 
 fig = px.line(room_metrics, x='date', y='temperature', title='Temperature (°C)')
 
+
+navbar = dbc.NavbarSimple(brand='Dashboard', brand_href='#', color='primary', dark=True)
+
 app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP]
 )
 
 app.layout = html.Div(children=[
 	html.H1(children='domus'),
-	dcc.Graph(
-        	id='example-graph',
-        	figure=fig
-    	),
-	dash_table.DataTable(
-    		id='table',
-    		columns=[{"name": i, "id": i} for i in openweather.columns],
-    		data=openweather.to_dict('records')
+	navbar,
+	dbc.Card(
+		dbc.CardBody(
+			dcc.Graph(
+        			id='example-graph',
+        			figure=fig,
+				config={"displayModeBar": False}
+    			)
+		),
+		className='mb-3'
+	),
+	dbc.Card(
+		dbc.CardBody(
+			dash_table.DataTable(
+    				id='table',
+    				columns=[{"name": i, "id": i} for i in openweather.columns],
+    				data=openweather.to_dict('records')
+			)
+		),
+		className='mb-3'
 	)
 ])
 
