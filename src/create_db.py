@@ -20,7 +20,8 @@ cursor.execute(
 	humidity REAL,
 	temperature REAL,
 	temperature_min REAL,
-	temperature_max REAL
+	temperature_max REAL,
+	UNIQUE (date) ON CONFLICT IGNORE			
 )''')
 
 conn.close()
