@@ -11,12 +11,10 @@ import datetime as dt
 
 conn = sqlite3.connect('sqlite/temperature_and_humidity.db')
 room_metrics = pd.read_sql_query('SELECT * FROM room_metrics', conn)
-openweather = pd.read_sql_query('SELECT * FROM openweather', conn)
+conn.close()
 
-openweather['date'] = pd.to_datetime(openweather['date']).dt.strftime('%m/%d/%y %H:%M')
 room_metrics['date'] = pd.to_datetime(room_metrics['date'])
 
-conn.close()
 
 fig = px.line(
 	room_metrics, 
@@ -34,7 +32,7 @@ app = dash.Dash(
 )
 
 app.layout = html.Div(children=[
-	html.H1(children='domus'),
+	html.H1('domus', style={'textAlign': 'center'}),
 	navbar,
 	dbc.CardDeck(
 		[
@@ -66,9 +64,13 @@ app.layout = html.Div(children=[
     						id='table',
     						columns=[{"name": i, "id": i} for i in room_metrics.columns],
     						data=room_metrics.to_dict('records'),
-						page_size=20,
-						fixed_rows={'headers': True},
-						style_table={'height': '300px', 'overflowY': 'auto'}
+							page_size=20,
+							fixed_rows={'headers': True},
+							style_table={'height': '300px', 'overflowY': 'auto'},
+							    style_cell={
+								'whiteSpace': 'normal',
+								'height': 'auto',
+							}
 					)])
 			)
 		]
