@@ -8,6 +8,7 @@ from dash.dependencies import Input, Output
 import dash_table
 import pandas as pd
 import datetime as dt
+import base64
 
 conn = sqlite3.connect('sqlite/temperature_and_humidity.db')
 room_metrics = pd.read_sql_query('SELECT * FROM room_metrics', conn)
@@ -25,14 +26,33 @@ fig = px.line(
 
 
 room_metrics['date'] = room_metrics['date'].dt.strftime('%a %b %d %I:%M')
-navbar = dbc.NavbarSimple(brand='Dashboard', brand_href='#', color='primary', dark=True)
+
+navbar = dbc.Navbar(
+	[
+		html.A(
+			dbc.Row(
+				[
+					dbc.Col(dbc.NavbarBrand("Dashboard", className="ml-2")),
+					dbc.Col(dbc.NavbarBrand("Setup", className="ml-2")),
+					dbc.Col(dbc.NavbarBrand("Code Review", className="ml-2")),
+					dbc.Col(dbc.NavbarBrand("Future Plans", className="ml-2"))
+				],
+				align="center",
+                no_gutters=True,
+			)
+		)
+	],
+)
 
 app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP]
 )
 
 app.layout = html.Div(children=[
-	html.H1('domus', style={'textAlign': 'center'}),
+	html.Div(children=[
+			html.H1('domus', style={'textAlign': 'center'})
+		]
+	),
 	navbar,
 	dbc.CardDeck(
 		[
@@ -41,7 +61,6 @@ app.layout = html.Div(children=[
 					dcc.Graph(
         					id='example-graph',
         					figure=fig,
-						config={"displayModeBar": False}
     					)
 				),
 				className='mb-3'
