@@ -15,7 +15,7 @@ QUERY_URL = f'{BASE_URL}q={CITY_NAME}&appId={TOKEN}&units={UNITS}'
 # ----------------------------------------------------------------------
 
 class OpenWeatherMapReader:
-	def __init__(self, query_url):
+	def __init__(self, query_url: str):
 		self.query_url = query_url
 	
 	def get_temperature_and_humidity(self) -> Tuple[str]:

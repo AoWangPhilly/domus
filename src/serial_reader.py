@@ -6,7 +6,7 @@ from typing import List
 SERIAL_PORT = '/dev/cu.usbmodem2201'
 
 class SerialReader:
-	def __init__(self, port):
+	def __init__(self, port: str):
 		self.ser = serial.Serial(port)
 		self.ser.flushInput()
 		
