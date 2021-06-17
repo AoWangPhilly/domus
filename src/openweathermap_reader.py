@@ -1,7 +1,7 @@
 import requests
-import json
 from os.path import join
 import datetime as dt
+from typing import Tuple
 
 # ------------------ OpenWeather API parameters -------------------------
 with open(join('..', 'token.txt'), 'r') as token:
@@ -18,7 +18,7 @@ class OpenWeatherMapReader:
 	def __init__(self, query_url):
 		self.query_url = query_url
 	
-	def get_temperature_and_humidity(self):
+	def get_temperature_and_humidity(self) -> Tuple[str]:
 		response = requests.get(self.query_url)
 		if response.status_code == 200:
 			data = response.json()
