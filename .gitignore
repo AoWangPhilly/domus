@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+sqlite/temperature_and_humidity.db
+token.txt
