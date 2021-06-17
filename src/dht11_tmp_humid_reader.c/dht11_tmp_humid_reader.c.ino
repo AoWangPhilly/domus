@@ -10,7 +10,7 @@ float humidity;
 float tempC;
 float tempF;
 
-// delay a minute between each read
+// delay 5 minutes between each read
 unsigned long setTime = 5*60*1000UL;
 
 void setup() {
