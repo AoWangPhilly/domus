@@ -10,12 +10,15 @@ import pandas as pd
 import datetime as dt
 import base64
 
-conn = sqlite3.connect('sqlite/temperature_and_humidity.db')
-room_metrics = pd.read_sql_query('SELECT * FROM room_metrics', conn)
-conn.close()
+def get_room_metrics(db_path='sqlite/temperature_and_humidity.db') -> pd.DataFrame:
+	conn = sqlite3.connect(db_path)
+	room_metrics = pd.read_sql_query('SELECT rowid, * FROM room_metrics', conn)
+	conn.close()
 
-room_metrics['date'] = pd.to_datetime(room_metrics['date'])
+	room_metrics['date'] = pd.to_datetime(room_metrics['date'])
+	return room_metrics
 
+room_metrics = get_room_metrics()
 
 fig = px.line(
 	room_metrics, 
@@ -25,7 +28,7 @@ fig = px.line(
 )
 
 
-room_metrics['date'] = room_metrics['date'].dt.strftime('%a %b %d %I:%M')
+# room_metrics['date'] = room_metrics['date'].dt.strftime('%a %b %d %I:%M')
 
 navbar = dbc.Navbar(
 	[
@@ -49,74 +52,33 @@ app = dash.Dash(
 )
 
 app.layout = html.Div(children=[
-	html.Div(children=[
-			html.H1('domus', style={'textAlign': 'center'})
-		]
-	),
+	html.Div(html.H1('domus', style={'textAlign': 'center'})),
 	navbar,
-	dbc.CardDeck(
-		[
-			dbc.Card(
-				dbc.CardBody(
-					dcc.Graph(
-        					id='example-graph',
-        					figure=fig,
-    					)
-				),
-				className='mb-3'
-			)
-		]
+	dcc.Graph(
+		id='graph',
+		figure=fig,
 	),
-	dbc.CardDeck(
-		[
-			dbc.Card(
-				dbc.CardBody([
-					dcc.DatePickerRange(
-    						end_date=dt.date(2017,6,21),
-    						display_format='MMMM Y, DD',
-    						start_date_placeholder_text='MMMM Y, DD'
-					)])
-			),
-			dbc.Card(
-				dbc.CardBody([
-					dash_table.DataTable(
-    						id='table',
-    						columns=[{"name": i, "id": i} for i in room_metrics.columns],
-    						data=room_metrics.to_dict('records'),
-							page_size=20,
-							fixed_rows={'headers': True},
-							style_table={'height': '300px', 'overflowY': 'auto'},
-							    style_cell={
-								'whiteSpace': 'normal',
-								'height': 'auto',
-							}
-					)])
-			)
-		]
-
-	)
+	dcc.Interval(
+		id='interval',
+		disabled=False,
+		interval=5*60*1000, # in milliseconds
+		n_intervals=0
+    )
 ])
+
+@app.callback(Output('graph', 'figure'),
+              Input('interval', 'n_intervals'))
+def update_metrics(n):
+	return px.line(
+		get_room_metrics(),
+		x='date', 
+		y='temperature',
+		title='Temperature (°C)'
+	)
+
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
 	# print(room_metrics)
 	# print(room_metrics.dtypes)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
